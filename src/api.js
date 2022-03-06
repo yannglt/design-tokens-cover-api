@@ -1,11 +1,11 @@
 const express = require("express");
-const serverless = require("serverless-http");
 const { createCanvas } = require('canvas');
 
 const app = express();
-const router = express.Router();
+// const router = express.Router();
+const port = 3000;
 
-router.get('/:category/:value', function (req, res) {
+app.get('/:category/:value', function (req, res) {
   const data = {
     "category": req.params.category,
     "value": req.params.value
@@ -28,7 +28,4 @@ router.get('/:category/:value', function (req, res) {
   res.send(buffer)
 });
 
-app.use(`/.netlify/functions/api`, router);
-
-module.exports = app;
-module.exports.handler = serverless(app);
+app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
