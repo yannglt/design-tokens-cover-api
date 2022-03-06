@@ -27,4 +27,6 @@ app.get('/:category/:value', function (req, res) {
   res.send(buffer)
 });
 
+module.exports = app;
+
 app.listen(port, () => console.log(`Server is running in port ${port}`));
