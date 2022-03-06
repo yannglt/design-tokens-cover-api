@@ -4,14 +4,13 @@
   "description": "A pretty noice API providing nice covers for all your design tokens for your design system documentation",
   "main": "index.js",
   "scripts": {
-    "vercel-build": "yum install libuuid-devel libmount-devel zlib && cp /lib64/{libuuid,libmount,libblkid,libz}.so.1 node_modules/canvas/build/Release/ && npm run build",
     "start": "node api/index.js",
     "build": "node api/index.js"
   },
   "author": "yannglt",
   "license": "ISC",
   "dependencies": {
-    "canvas": "^2.8.0",
+    "@napi-rs/canvas": "^0.1.20",
     "express": "^4.17.3"
   }
 }

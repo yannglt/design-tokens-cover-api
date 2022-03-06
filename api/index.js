@@ -1,5 +1,5 @@
 const express = require("express");
-const { createCanvas } = require('canvas');
+const { createCanvas } = require('@napi-rs/canvas');
 
 const app = express();
 const port = process.env.port || 3000;
