@@ -4,7 +4,7 @@
   "description": "A pretty noice API providing nice covers for all your design tokens for your design system documentation",
   "main": "index.js",
   "engines": {
-    "node": "17.2"
+    "node": "14.x"
   },
   "scripts": {
     "start": "node api.js"
