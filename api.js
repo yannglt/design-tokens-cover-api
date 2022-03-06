@@ -2,8 +2,7 @@ const express = require("express");
 const { createCanvas } = require('canvas');
 
 const app = express();
-// const router = express.Router();
-const port = 3000;
+const port = process.env.port || 3000;
 
 app.get('/:category/:value', function (req, res) {
   const data = {
@@ -28,4 +27,4 @@ app.get('/:category/:value', function (req, res) {
   res.send(buffer)
 });
 
-app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
+app.listen(port, () => console.log(`Server is running in port ${port}`));
