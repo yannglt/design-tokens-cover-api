@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "A pretty noice API providing nice covers for all your design tokens for your design system documentation",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "build": "node index.js"
   },
@@ -12,7 +16,6 @@
   "dependencies": {
     "express": "^4.17.3",
     "handlebars": "^4.7.7",
-    "netlify-lambda": "2.0.1",
     "puppeteer": "^13.5.0"
   }
 }

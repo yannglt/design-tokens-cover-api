@@ -3,129 +3,63 @@ const puppeteer = require('puppeteer');
 const Handlebars = require("handlebars");
 
 const app = express();
-const router = express.Router();
 const port = process.env.PORT || 3000;
 
 const templateHTML = `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <style>{{styles}}</style>
-  </head>
-  <body id="body">
-    <main>
-      <div class='logo'>
-        {{#if logoUrl}}
-          <img src="{{logoUrl}}" alt="logo" />
-        {{else}}
-          <span>Example Logo</span>
-        {{/if}}
-      </div>
-      <div class="title">{{title}}</div>
-      <div>
-        {{#if tags}}
-          <ul class="tags">
-          {{#each tags}}
-            <li class="tag-item">#{{this}}</li>
-          {{/each}}
-          </ul>
-        {{/if}}
-        {{#if path}}
-          <p class="path">{{path}}</p>
-        {{/if}}
-      </div>
-    </main>
-  </body>
-</html>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <style>{{styles}}</style>
+    </head>
+    <body id="body">
+      <main>
+        <svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="200" fill="#F6F8FB"/>
+            <g filter="url(#filter0_dd_226_16959)">
+              <rect x="40" y="34" width="220" height="132" rx="24" fill="white"/>
+              <rect x="64" y="58" width="172" height="84" rx="4" fill="#FFDFB8"/>
+              <text fill="#FF715C" xml:space="preserve" style="white-space: pre" font-family="Fira Code" font-size="24" font-weight="600"><tspan text-anchor="middle" x="150" y="108">{{measurement}}</tspan></text>
+              <rect x="64" y="58" width="172" height="84" rx="4" stroke="#FF715C" stroke-width="2" stroke-dasharray="8 4"/>
+            </g>
+          <defs>
+            <filter id="filter0_dd_226_16959" x="32" y="28" width="236" height="148" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+              <feOffset dy="2"/>
+              <feGaussianBlur stdDeviation="4"/>
+              <feComposite in2="hardAlpha" operator="out"/>
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0"/>
+              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_226_16959"/>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+              <feOffset dy="1"/>
+              <feGaussianBlur stdDeviation="2"/>
+              <feComposite in2="hardAlpha" operator="out"/>
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0"/>
+              <feBlend mode="normal" in2="effect1_dropShadow_226_16959" result="effect2_dropShadow_226_16959"/>
+              <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_226_16959" result="shape"/>
+            </filter>
+          </defs>
+        </svg>
+
+      </main>
+    </body>
+  </html>
 `;
 
 const templateStyles = `
-* {
-  box-sizing: border-box;
-}
-body {
-  padding: 2.5rem;
-  height: 90vh;
-  background: #042f7d;
-  {{#if bgUrl}}
-  background-image: url({{bgUrl}});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  {{else}}
-  background: linear-gradient(to right, #042f7d, #007eff);
-  color: #00ffae;
-  {{/if}}
-}
-main {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.logo {
-  width: 15rem;
-  height: 3rem;
-}
-.logo img {
-  width: 100%;
-  height: 100%;
-}
-.logo span {
-  font-size: 2rem;
-  color: yellow;
-  font-style: italic;
-  text-decoration: wavy;
-  font-variant: unicase;
-}
-.title {
-  font-size: {{fontSize}};
-  text-transform: capitalize;
-  margin: 0.25rem 0;
-  font-weight: bold;
-}
-.tags {
-  display: flex;
-  list-style-type: none;
-  padding-left: 0;
-  color: #ff00d2;
-  font-size: 1.5rem;
-}
-.tag-item {
-  margin-right: 0.5rem;
-}
-.path {
-  color: #6dd6ff;
-  font-size: 1.25rem;
-}
+  * {
+    box-sizing: border-box;
+  }
 `;
 
-// Get dynamic font size for title depending on its length
-function getFontSize(title = "") {
-  if (!title || typeof title !== 'string') return "";
-  const titleLength = title.length;
-  if (titleLength > 55) return "2.75rem";
-  if (titleLength > 35) return "3.25rem";
-  if (titleLength > 25) return "4.25rem";
-  return "4.75rem";
-}
-
-router.get('/ogimage', async (req, res) => {
-  // compiled styles
-  const compiledStyles = Handlebars.compile(templateStyles)({
-    bgUrl: req.query.bgUrl,
-    fontSize: getFontSize(req.query.title),
-  });
+app.get('/ogimage', async (req, res) => {
+  const compiledStyles = Handlebars.compile(templateStyles);
 
   // compiled HTML
   const compiledHTML = Handlebars.compile(templateHTML)({
-    logoUrl: req.query.logoUrl,
-    title: req.query.title,
-    tags: req.query.tags,
-    path: req.query.path,
+    measurement: req.query.measurement,
     styles: compiledStyles,
   });
 
@@ -134,34 +68,14 @@ router.get('/ogimage', async (req, res) => {
     headless: true,
     args: ["--no-sandbox"],
     defaultViewport: {
-      width: 1200,
-      height: 630,
-    }
+      width: 300,
+      height: 200,
+    },
   });
   const page = await browser.newPage();
+  await page.setViewport({ width: 300, height: 200, deviceScaleFactor: 2 });
   // Set the content to our rendered HTML
   await page.setContent(compiledHTML, { waitUntil: "domcontentloaded" });
-  // Wait until all images and fonts have loaded
-  await page.evaluate(async () => {
-    const selectors = Array.from(document.querySelectorAll("img"));
-    await Promise.all([
-      document.fonts.ready,
-      ...selectors.map((img) => {
-        // Image has already finished loading, let’s see if it worked
-        if (img.complete) {
-          // Image loaded and has presence
-          if (img.naturalHeight !== 0) return;
-          // Image failed, so it has no height
-          throw new Error("Image failed to load");
-        }
-        // Image hasn’t loaded yet, added an event listener to know when it does
-        return new Promise((resolve, reject) => {
-          img.addEventListener("load", resolve);
-          img.addEventListener("error", reject);
-        });
-      }),
-    ]);
-  });
 
   const element = await page.$('#body');
   const image = await element.screenshot({ omitBackground: true });
@@ -171,6 +85,4 @@ router.get('/ogimage', async (req, res) => {
   res.end(image);
 });
 
-module.exports = router;
-
-// app.listen(port, () => console.log(`Server is running in port ${port}`));
+app.listen(port, () => console.log(`Server is running in port ${port}`));
