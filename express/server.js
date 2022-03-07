@@ -1,12 +1,11 @@
 'use strict'
 const express = require('express');
 const serverless = require('serverless-http');
+const app = express();
+const bodyParser = require('body-parser');
+const router = express.Router();
 const puppeteer = require('puppeteer');
 const handlebars = require("handlebars");
-
-const app = express();
-const router = express.Router();
-// const port = process.env.PORT || 3000;
 
 const templateHTML = `
   <!DOCTYPE html>
@@ -32,6 +31,7 @@ const templateHTML = `
   </html>
 `;
 
+app.use(bodyParser.json())
 app.use('/.netlify/functions/server', router) // path must route to lambda
 app.use('/', router)
 
@@ -42,12 +42,10 @@ router.get('/', (req, res) => {
 })
 
 router.get('/ogimage', async (req, res) => {
-  // compiled HTML
   const compiledHTML = handlebars.compile(templateHTML)({
     measurement: req.query.measurement,
   });
 
-  // Launch Headless browser and capture creenshot
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox"],
@@ -58,14 +56,13 @@ router.get('/ogimage', async (req, res) => {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 300, height: 200, deviceScaleFactor: 2 });
-  // Set the content to our rendered HTML
   await page.setContent(compiledHTML, { waitUntil: "domcontentloaded" });
 
   const element = await page.$('#body');
   const image = await element.screenshot({ omitBackground: true });
   await browser.close();
 
-  res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': `immutable, no-transform, s-max-age=2592000, max-age=2592000` });
+  res.writeHead(200, { 'Content-Type': 'image/png' });
   res.end(image);
 });
 
