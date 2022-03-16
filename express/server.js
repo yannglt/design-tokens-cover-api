@@ -13,7 +13,6 @@ const source = `
 `;
 
 app.use(bodyParser.json())
-app.use('/.netlify/functions/server', router)
 app.use('/', router)
 
 router.get('/', (req, res) => {
