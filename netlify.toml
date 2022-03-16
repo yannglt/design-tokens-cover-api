@@ -1,5 +1,4 @@
-[functions]
-  node_bundler = "esbuild"
 [build]
-  command = "npm install && npm run build"
-  functions = "functions"
+  command = "npm run build"
+  publish = "src"
+  functions = "lambda"
