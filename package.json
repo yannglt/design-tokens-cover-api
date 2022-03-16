@@ -2,12 +2,9 @@
   "name": "design-tokens-cover-api",
   "version": "1.0.0",
   "description": "A pretty noice API providing nice covers for all your design tokens for your design system documentation",
-  "main": "express/server.js",
-  "engines": {
-    "node": "14.x"
-  },
+  "main": "node/api.js",
   "scripts": {
-    "start": "node express/server.js",
+    "start": "node api/index.js",
     "dev": "nodemon server-local.js"
   },
   "author": "yannglt",

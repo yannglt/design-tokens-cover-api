@@ -15,13 +15,7 @@ const source = `
 app.use(bodyParser.json())
 app.use('/', router)
 
-router.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/html' })
-  res.write('<h1>Hello, stranger</h1>')
-  res.end()
-})
-
-router.get('/ogimage', async (req, res) => {
+router.get('/api', async (req, res) => {
 
   // Create a color cover
   // const image = await sharp({
