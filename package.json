@@ -2,11 +2,12 @@
   "name": "design-tokens-cover-api",
   "version": "1.0.0",
   "description": "A pretty noice API providing nice covers for all your design tokens for your design system documentation",
-  "main": "src/server.js",
+  "main": "express/server.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "lambda-serve": "netlify-lambda serve src/server.js",
-    "lambda-build": "netlify-lambda build src/server.js",
-    "build": "NODE_ENV=production webpack && npm run lambda-build",
+    "start": "node express/server.js",
     "dev": "nodemon server-local.js"
   },
   "author": "yannglt",
@@ -14,7 +15,6 @@
   "dependencies": {
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
-    "netlify-lambda": "^2.0.15",
     "nodemon": "^2.0.15",
     "serverless-http": "^2.7.0",
     "sharp": "^0.30.3"
