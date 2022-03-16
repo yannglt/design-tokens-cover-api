@@ -5,5 +5,11 @@
       "src": "./express/server.js",
       "use": "@vercel/node"
     }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "./express/server.js"
+    }
   ]
 }
