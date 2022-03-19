@@ -3,6 +3,10 @@ const { json } = require('express/lib/response');
 const serverless = require('serverless-http');
 const sharp = require('sharp');
 const tinycolor = require("tinycolor2");
+const path = require('path');
+
+path.resolve(process.cwd(), 'fonts', 'fonts.conf');
+path.resolve(process.cwd(), 'fonts', 'Inter-Bold.ttf');
 
 const app = express();
 const router = express.Router();
@@ -25,7 +29,7 @@ router.get('/api', async (req, res) => {
         <rect opacity="0.08" x="`+ pathStart + `" y="112" width="`+ value + `" height="24" fill="black"/>
         <rect x="`+ pathMarkerStart + `" y="112" width="4" height="24" fill="black"/>
         <rect x="`+ pathMarkerEnd + `" y="112" width="4" height="24" fill="black"/>
-        <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="32" font-weight="bold" text-anchor="middle" x="180" y="96">`+ value + `px</text>
+        <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="32" font-weight="bold" text-anchor="middle" x="180" y="96">`+ value + `px</text>
         <rect x="`+ pathStart + `" y="122" width="` + value + `" height="4" fill="black"/>
       </svg>
     `
