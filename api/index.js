@@ -19,7 +19,26 @@ router.get('/api', async (req, res) => {
 
   switch(category) {
     case "color":
-      // instructions go here
+      const colorValue = req.query.value;
+
+      const rgb = tinycolor(colorValue).toRgb();
+      const red = JSON.parse(rgb.r);
+      const green = JSON.parse(rgb.g);
+      const blue = JSON.parse(rgb.b);
+
+      const imageColor = await sharp({
+        create: {
+          width: 256,
+          height: 256,
+          channels: 4,
+          background: { r: red, g: green, b: blue, alpha: 1 }
+        }
+      })
+      .png()
+      .toBuffer();
+
+      res.writeHead(200, { 'Content-Type': 'image/png' });
+      res.end(imageColor);
       break;
 
     case "text-style":
@@ -27,28 +46,28 @@ router.get('/api', async (req, res) => {
       break;
 
     case "measurement":
-      const value = req.query.value;
-      const pathStart = 180 - value / 2;
-      const pathMarkerStart = 180 - value / 2 - 4;
-      const pathMarkerEnd = 180 + value / 2;
+      const measurementValue = req.query.value;
+      const pathStart = 180 - measurementValue / 2;
+      const pathMarkerStart = 180 - measurementValue / 2 - 4;
+      const pathMarkerEnd = 180 + measurementValue / 2;
 
       const measurement = `
         <svg width="360" height="200" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="360" height="200" fill="#F5F4F0"/>
-          <rect opacity="0.08" x="`+ pathStart + `" y="112" width="`+ value + `" height="24" fill="black"/>
+          <rect opacity="0.08" x="`+ pathStart + `" y="112" width="` + measurementValue + `" height="24" fill="black"/>
           <rect x="`+ pathMarkerStart + `" y="112" width="4" height="24" fill="black"/>
           <rect x="`+ pathMarkerEnd + `" y="112" width="4" height="24" fill="black"/>
-          <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="32" font-weight="bold" text-anchor="middle" x="180" y="96">`+ value + `px</text>
-          <rect x="`+ pathStart + `" y="122" width="` + value + `" height="4" fill="black"/>
+          <text fill="black" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="32" font-weight="bold" text-anchor="middle" x="180" y="96">`+ measurementValue + `px</text>
+          <rect x="`+ pathStart + `" y="122" width="` + measurementValue + `" height="4" fill="black"/>
         </svg>
       `
 
-      const image = await sharp(Buffer.from(measurement))
+      const imageMeasurement = await sharp(Buffer.from(measurement))
       .png()
       .toBuffer();
 
       res.writeHead(200, { 'Content-Type': 'image/png' });
-      res.end(image);
+      res.end(imageMeasurement);
       break;
 
     case "duration":
@@ -68,7 +87,27 @@ router.get('/api', async (req, res) => {
       break;
 
     case "gradient":
-      // instructions go here
+      const gradientValueStart = req.query.valueStart;
+      const gradientValueEnd = req.query.valueEnd;
+
+      const gradient = `
+        <svg width="360" height="200" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="360" height="200" fill="url(#gradientPaint)"/>
+          <defs>
+            <linearGradient id="gradientPaint" x1="180" y1="0" x2="180" y2="200" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#`+ gradientValueStart + `"/>
+              <stop offset="1" stop-color="#`+ gradientValueEnd + `"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `
+
+      const imageGradient = await sharp(Buffer.from(gradient))
+      .png()
+      .toBuffer();
+
+      res.writeHead(200, { 'Content-Type': 'image/png' });
+      res.end(imageGradient);
       break;
 
     case "weight":
@@ -86,27 +125,6 @@ router.get('/api', async (req, res) => {
     default:
       res.end('fail')
   }
-  
-  // const color = req.query.color;
-
-  // const red = req.query.red;
-  // const green = req.query.green;
-  // const blue = req.query.blue;
-
-  // const rgb = tinycolor(color).toRgb();
-  // const red = JSON.parse(rgb.r);
-  // const green = JSON.parse(rgb.g);
-  // const blue = JSON.parse(rgb.b);
-
-  // Create a color cover
-  // const image = await sharp({
-  //   create: {
-  //     width: 256,
-  //     height: 256,
-  //     channels: 4,
-  //     background: { r: red, g: green, b: blue, alpha: 1 }
-  //   }
-  // })
 });
 
 module.exports = app
